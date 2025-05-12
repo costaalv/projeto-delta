@@ -68,7 +68,7 @@ Verifica a integridade dos blocos comparando as assinaturas atuais com as origin
 
 ### Figura: Vetores projetados do bloco 0 em diferentes condições
 
-![Vetores projetados](../examples/vetores_bloco0.png)
+![Vetores projetados](https://raw.githubusercontent.com/costaalv/projeto-delta/main/examples/vetores_bloco0.png)
 
 Cada curva representa o vetor espectral do primeiro bloco de um texto sob diferentes versões:
 
@@ -116,8 +116,8 @@ print(texto)
 
 - O CIP é funcional, auditável, leve — e radicalmente seguro.
 
-> A integridade não é mais protegida por segredo.\\
-> Ela é ressonância.\\
+> A integridade não é mais protegida por segredo.<br>
+> Ela é ressonância.<br>
 > Ela é forma.
 
 ## Status
@@ -130,7 +130,7 @@ print(texto)
 - Em estruturação institucional
 
 ## Repositório (em breve)
-github.com/seu-usuario/projeto-delta
+github.com/costaalv/projeto-delta
 
 ## Valor comercial da verificação espectral
 
@@ -225,8 +225,8 @@ O CIP não se baseia em segredo:
 ## Autor
 
 **Alvaro Costa**
-Projeto DELTA — Integridade Criptográfica por Estrutura\\
-Ex-aluno da FEA-USP (Economia) e FDUSP (Direito)\\
-Auditor Fiscal de Rendas do Estado de São Paulo\\
+Projeto DELTA — Integridade Criptográfica por Estrutura<br>
+Ex-aluno da FEA-USP (Economia) e FDUSP (Direito)<br>
+Auditor Fiscal de Rendas do Estado de São Paulo<br>
 Cientista de Dados
 
