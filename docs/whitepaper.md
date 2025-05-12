@@ -224,7 +224,7 @@ O CIP não se baseia em segredo:
 
 ## Autor
 
-**Alvaro Costa**
+**Alvaro Costa**<br>
 Projeto DELTA — Integridade Criptográfica por Estrutura<br>
 Ex-aluno da FEA-USP (Economia) e FDUSP (Direito)<br>
 Auditor Fiscal de Rendas do Estado de São Paulo<br>
