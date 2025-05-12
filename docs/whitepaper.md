@@ -129,8 +129,11 @@ print(texto)
 
 - Em estruturação institucional
 
-## Repositório (em breve)
-github.com/costaalv/projeto-delta
+## Repositório oficial
+
+[github.com/costaalv/projeto-delta](https://github.com/costaalv/projeto-delta)
+
+O código-fonte do Projeto DELTA, os notebooks com experimentos, o white paper e os exemplos de verificação vetorial estão abertos para escrutínio público, revisão técnica e contribuições.
 
 ## Valor comercial da verificação espectral
 
@@ -220,7 +223,6 @@ O CIP não se baseia em segredo:
 > **O Projeto DELTA propõe uma nova forma de garantir a verdade:**
 > 
 > **por estrutura, não por sigilo.**
-
 
 ## Autor
 
