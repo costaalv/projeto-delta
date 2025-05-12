@@ -68,7 +68,7 @@ Verifica a integridade dos blocos comparando as assinaturas atuais com as origin
 
 ### Figura: Vetores projetados do bloco 0 em diferentes condições
 
-![Vetores projetados](examples/vetores_bloco0.png)
+![Vetores projetados](../examples/vetores_bloco0.png)
 
 Cada curva representa o vetor espectral do primeiro bloco de um texto sob diferentes versões:
 
