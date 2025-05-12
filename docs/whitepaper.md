@@ -212,9 +212,7 @@ O CIP não se baseia em segredo:
 
 ### Conclusão
 
-> Detectar 1 byte alterado em 185 MB — com velocidade e precisão —
-> 
-> não é mais teoria. É código funcionando.
+> Detectar 1 byte alterado em 185 MB — com velocidade e precisão — não é mais teoria. É código funcionando.
 > 
 > E ele não grita porque foi violado.
 > 
