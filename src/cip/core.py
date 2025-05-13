@@ -18,12 +18,20 @@ def construct_cosine_matrix(x, size):
     return (matrix + matrix.T) / 2
 
 def codificar_bloco(texto, bloco_size):
-    vetor = np.frombuffer(texto.encode(), dtype=np.uint8).astype(float)
+    if isinstance(texto, str):
+        vetor = np.frombuffer(texto.encode('utf-8'), dtype=np.uint8).astype(float)
+    elif isinstance(texto, bytes):
+        vetor = np.frombuffer(texto, dtype=np.uint8).astype(float)
+    else:
+        raise TypeError("O bloco deve ser do tipo str ou bytes.")
     return np.pad(vetor, (0, max(0, bloco_size - len(vetor))))[:bloco_size]
 
-def decodificar_bloco(vetor):
+def decodificar_bloco(vetor, como_bytes=True):
     vetor_int = np.clip(np.round(vetor), 0, 255).astype(np.uint8)
-    return bytes(vetor_int).decode(errors='ignore').rstrip('\x00')
+    if como_bytes:
+        return bytes(vetor_int)
+    else:
+        return bytes(vetor_int).decode('utf-8', errors='ignore').rstrip('\x00')
 
 def cip_cifrar_blocos_texto(arquivo_entrada, x=7213, size=1024):
     with open(arquivo_entrada, 'r', encoding='utf-8') as f:
