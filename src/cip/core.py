@@ -4,9 +4,6 @@ from numpy.linalg import eigh
 from math import log
 import hashlib
 
-# -------------------------------
-# Funções auxiliares principais
-# -------------------------------
 def delta_pi(x):
     def pi(n):
         return len(list(primerange(1, n + 1)))
@@ -28,9 +25,6 @@ def decodificar_bloco(vetor):
     vetor_int = np.clip(np.round(vetor), 0, 255).astype(np.uint8)
     return bytes(vetor_int).decode(errors='ignore').rstrip('\x00')
 
-# -------------------------------
-# Cifragem e Decifragem em blocos
-# -------------------------------
 def cip_cifrar_blocos_texto(arquivo_entrada, x=7213, size=1024):
     with open(arquivo_entrada, 'r', encoding='utf-8') as f:
         mensagem = f.read()
@@ -39,11 +33,11 @@ def cip_cifrar_blocos_texto(arquivo_entrada, x=7213, size=1024):
     _, autovetores = eigh(matriz)
     base = autovetores[:, -size:]
     blocos = [mensagem[i:i+size] for i in range(0, len(mensagem), size)]
-    blocos_bytes = [bloco.encode('utf-8') for bloco in blocos]  # guardar original
+    blocos_bytes = [bloco.encode('utf-8') for bloco in blocos]
     cifrado = [base @ codificar_bloco(bloco, size) for bloco in blocos]
     np.savez(arquivo_entrada + '.cip', cifrado=cifrado, x=x, size=size, blocos_bytes=blocos_bytes)
     return len(cifrado)
-    
+
 def cip_assinar_bloco_hibrido(mensagem, x=7213, size=1024):
     matriz = construct_cosine_matrix(x, size)
     _, autovetores = eigh(matriz)
@@ -65,7 +59,6 @@ def cip_decifrar_blocos_texto(arquivo_cifrado):
     x = int(data['x'])
     size = int(data['size'])
 
-    # Preferir reconstruir com os blocos originais, se existirem
     if 'blocos_bytes' in data:
         blocos_bytes = data['blocos_bytes']
         texto = ''.join([bloco.tobytes().decode('utf-8', errors='ignore') for bloco in blocos_bytes])
@@ -97,4 +90,3 @@ def cip_verificar_bloco_hibrido(mensagem, assinaturas_ref, chave):
         if i >= len(assinaturas_ref) or hash_val != assinaturas_ref[i]:
             alterados += 1
     return alterados, len(blocos)
-
