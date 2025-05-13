@@ -89,12 +89,22 @@ def cip_verificar_bloco_hibrido(mensagem, assinaturas_ref, chave):
     base = autovetores[:, -chave['size']:]
     base_inv = np.linalg.pinv(base)
 
-    blocos = [mensagem[i:i+chave['size']] for i in range(0, len(mensagem), chave['size'])]
+    size = chave['size']
+    
+    # Verifica se é bytes ou string
+    if isinstance(mensagem, bytes):
+        blocos = [mensagem[i:i+size] for i in range(0, len(mensagem), size)]
+    elif isinstance(mensagem, str):
+        blocos = [mensagem[i:i+size] for i in range(0, len(mensagem), size)]
+    else:
+        raise TypeError("mensagem deve ser str ou bytes")
+
     alterados = 0
     for i, bloco in enumerate(blocos):
-        vetor = codificar_bloco(bloco, chave['size'])
+        vetor = codificar_bloco(bloco, size)
         projecao = base_inv @ vetor
         hash_val = hashlib.sha256(projecao.astype(np.float32).tobytes()).hexdigest()
         if i >= len(assinaturas_ref) or hash_val != assinaturas_ref[i]:
             alterados += 1
     return alterados, len(blocos)
+
