@@ -4,8 +4,9 @@ from .core import (
     construct_cosine_matrix,
     codificar_bloco,
     decodificar_bloco,
-    cip_cifrar_blocos_texto,
-    cip_assinar_bloco_hibrido,
-    cip_decifrar_blocos_texto,
-    cip_verificar_bloco_hibrido
+    cip_cifrar_blocos_bytes,
+    cip_assinar_blocos_bytes,
+    cip_verificar_blocos_bytes,
+    cip_decifrar_blocos_bytes
 )
+
