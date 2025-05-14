@@ -1,4 +1,3 @@
-
 import numpy as np
 from sympy import primerange
 from numpy.linalg import eigh
@@ -8,6 +7,7 @@ import hashlib
 # -------------------------------
 # Funções auxiliares principais
 # -------------------------------
+
 def delta_pi(x):
     def pi(n):
         return len(list(primerange(1, n + 1)))
@@ -30,36 +30,42 @@ def codificar_bloco(texto, bloco_size):
         raise TypeError("O bloco deve ser do tipo str ou bytes.")
     return np.pad(vetor, (0, max(0, bloco_size - len(vetor))))[:bloco_size]
 
-def decodificar_bloco(vetor, como_bytes=True):
+def decodificar_bloco(vetor):
     vetor_int = np.clip(np.round(vetor), 0, 255).astype(np.uint8)
-    if como_bytes:
-        return bytes(vetor_int)
-    else:
-        return bytes(vetor_int).decode('utf-8', errors='ignore').rstrip('\x00')
+    return bytes(vetor_int)
 
 # -------------------------------
 # Cifragem e Decifragem em blocos
 # -------------------------------
-def cip_cifrar_blocos_texto(arquivo_entrada, x=7213, size=1024):
-    with open(arquivo_entrada, 'r', encoding='utf-8') as f:
-        mensagem = f.read()
 
+def cip_cifrar_blocos_bytes(dados, x=7213, size=1024):
+    """
+    Cifra um conteúdo em bytes usando projeção vetorial em base harmônica derivada de Δπ.
+    Retorna um dicionário com os dados prontos para serem salvos como .npz.
+    """
     matriz = construct_cosine_matrix(x, size)
     _, autovetores = eigh(matriz)
     base = autovetores[:, -size:]
-    blocos = [mensagem[i:i+size] for i in range(0, len(mensagem), size)]
-    blocos_bytes = [bloco.encode('utf-8') for bloco in blocos]
-    cifrado = [base @ codificar_bloco(bloco, size) for bloco in blocos]
-    np.savez(arquivo_entrada + '.cip', cifrado=cifrado, x=x, size=size, blocos_bytes=blocos_bytes)
-    return len(cifrado)
 
-def cip_assinar_bloco_hibrido(mensagem, x=7213, size=1024):
+    blocos = [dados[i:i+size] for i in range(0, len(dados), size)]
+    cifrado = [base @ codificar_bloco(bloco, size) for bloco in blocos]
+
+    blocos_bytes = [np.frombuffer(bloco.ljust(size, b'\x00'), dtype=np.uint8) for bloco in blocos]
+
+    return {
+        'cifrado': cifrado,
+        'x': x,
+        'size': size,
+        'blocos_bytes': blocos_bytes
+    }
+
+def cip_assinar_blocos_bytes(dados, x=7213, size=1024):
     matriz = construct_cosine_matrix(x, size)
     _, autovetores = eigh(matriz)
     base = autovetores[:, -size:]
     base_inv = np.linalg.pinv(base)
 
-    blocos = [mensagem[i:i+size] for i in range(0, len(mensagem), size)]
+    blocos = [dados[i:i+size] for i in range(0, len(dados), size)]
     assinaturas = []
     for bloco in blocos:
         vetor = codificar_bloco(bloco, size)
@@ -68,35 +74,51 @@ def cip_assinar_bloco_hibrido(mensagem, x=7213, size=1024):
         assinaturas.append(hash_val)
     return assinaturas, {'x': x, 'size': size}
 
-def cip_decifrar_blocos_texto(arquivo_cifrado):
-    data = np.load(arquivo_cifrado, allow_pickle=True)
+def cip_decifrar_blocos_bytes(data_or_path):
+    """
+    Reconstrói o conteúdo original a partir de dados cifrados em blocos,
+    retornando os bytes decodificados.
+
+    Pode receber diretamente um dicionário (npz-like) ou o caminho para um .npz.
+    """
+    import numpy as np
+    from numpy.linalg import pinv, eigh
+
+    if isinstance(data_or_path, str):
+        data = np.load(data_or_path, allow_pickle=True)
+    else:
+        data = data_or_path
+
     cifrado = data['cifrado']
     x = int(data['x'])
     size = int(data['size'])
 
+    # Se os blocos originais estiverem disponíveis, usar diretamente
     if 'blocos_bytes' in data:
         blocos_bytes = data['blocos_bytes']
-        texto = ''.join([bloco.tobytes().decode('utf-8', errors='ignore') for bloco in blocos_bytes])
-    else:
-        matriz = construct_cosine_matrix(x, size)
-        _, autovetores = eigh(matriz)
-        base = autovetores[:, -size:]
-        base_inv = np.linalg.pinv(base)
-        blocos = [decodificar_bloco(base_inv @ bloco, como_bytes=False) for bloco in cifrado]
-        texto = ''.join(blocos)
+        return b''.join([bloco.tobytes() for bloco in blocos_bytes])
 
-    saida = arquivo_cifrado.replace('.cip.npz', '_decifrado.txt')
-    with open(saida, 'w', encoding='utf-8') as f:
-        f.write(texto)
-    return saida
+    # Caso contrário, reconstruir via projeção reversa
+    matriz = construct_cosine_matrix(x, size)
+    _, autovetores = eigh(matriz)
+    base = autovetores[:, -size:]
+    base_inv = pinv(base)
 
-def cip_verificar_bloco_hibrido(mensagem, assinaturas_ref, chave):
+    blocos = []
+    for bloco in cifrado:
+        vetor_reconstruido = base_inv @ bloco
+        vetor_int = np.clip(np.round(vetor_reconstruido), 0, 255).astype(np.uint8)
+        blocos.append(bytes(vetor_int))
+
+    return b''.join(blocos)
+
+def cip_verificar_blocos_bytes(dados, assinaturas_ref, chave):
     matriz = construct_cosine_matrix(chave['x'], chave['size'])
     _, autovetores = eigh(matriz)
     base = autovetores[:, -chave['size']:]
     base_inv = np.linalg.pinv(base)
 
-    blocos = [mensagem[i:i+chave['size']] for i in range(0, len(mensagem), chave['size'])]
+    blocos = [dados[i:i+chave['size']] for i in range(0, len(dados), chave['size'])]
     alterados = 0
     for i, bloco in enumerate(blocos):
         vetor = codificar_bloco(bloco, chave['size'])
@@ -106,43 +128,3 @@ def cip_verificar_bloco_hibrido(mensagem, assinaturas_ref, chave):
             alterados += 1
     return alterados, len(blocos)
 
-# -------------------------------
-# Assinatura e Verificação de Arquivos PDF (binários)
-# -------------------------------
-def assinar_pdf_cip(caminho_pdf, x=7213, size=1024):
-    with open(caminho_pdf, 'rb') as f:
-        dados = f.read()
-
-    blocos = [dados[i:i+size] for i in range(0, len(dados), size)]
-    matriz = construct_cosine_matrix(x, size)
-    _, autovetores = eigh(matriz)
-    base = autovetores[:, -size:]
-    base_inv = np.linalg.pinv(base)
-
-    assinaturas = []
-    for bloco in blocos:
-        vetor = np.frombuffer(bloco.ljust(size, b'\x00'), dtype=np.uint8).astype(float)
-        proj = base_inv @ vetor
-        hash_val = hashlib.sha256(proj.astype(np.float32).tobytes()).hexdigest()
-        assinaturas.append(hash_val)
-
-    return assinaturas, {'x': x, 'size': size}
-
-def verificar_pdf_cip(caminho_pdf, assinaturas_ref, chave):
-    with open(caminho_pdf, 'rb') as f:
-        dados = f.read()
-
-    blocos = [dados[i:i+chave['size']] for i in range(0, len(dados), chave['size'])]
-    matriz = construct_cosine_matrix(chave['x'], chave['size'])
-    _, autovetores = eigh(matriz)
-    base = autovetores[:, -chave['size']:]
-    base_inv = np.linalg.pinv(base)
-
-    alterados = 0
-    for i, bloco in enumerate(blocos):
-        vetor = np.frombuffer(bloco.ljust(chave['size'], b'\x00'), dtype=np.uint8).astype(float)
-        proj = base_inv @ vetor
-        hash_val = hashlib.sha256(proj.astype(np.float32).tobytes()).hexdigest()
-        if i >= len(assinaturas_ref) or hash_val != assinaturas_ref[i]:
-            alterados += 1
-    return alterados, len(blocos)
