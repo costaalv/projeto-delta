@@ -1,25 +1,56 @@
 # Projeto DELTA — Cifra de Integridade Primal (CIP)
 
-O Projeto DELTA propõe uma cifra pós-quântica baseada na estrutura espectral dos números primos.
-A **Cifra de Integridade Primal (CIP)** opera por projeção vetorial em uma base harmônica construída com a função primal dos primos:
+A **Cifra de Integridade Primal (CIP)** é uma proposta inédita de integridade digital baseada em **estrutura, não em segredo**.
+
+Em vez de criptografar, a CIP **projeta** cada bloco de dados em uma base harmônica derivada da estrutura espectral dos números primos:
 
 $$
 \Delta_\pi(x) = \pi(x) - 2\pi(x/2)
 $$
 
-## Características
+O resultado é um sistema leve, auditável, pós-quântico e hipersensível:  
+**se o conteúdo ressoa, é original — se não ressoa, é ruído.**
 
-- Cifragem e decifragem com fidelidade absoluta por forma espectral
-- Assinatura vetorial por bloco com verificação hash SHA-256
-- Sensível a alterações mínimas (até um espaço em branco)
-- Resistente a ataques quânticos: não depende de segredo, fatoração ou curva elíptica
-- Baseada na ressonância com a estrutura primal dos números primos
+---
 
-## Estrutura
+## Principais Características
+
+- **Integridade vetorial absoluta**: projeção em base espectral primitiva
+- **Verificação bloco a bloco** com hash SHA-256
+- **Sensível a mutações mínimas** — até 1 bit ou espaço em branco
+- **Resistência estrutural à computação quântica**
+- **Sem segredo, sem chave, sem encriptação**
+- **Funciona com qualquer conteúdo**: texto, PDF, imagem, código, áudio
+
+---
+
+## Estrutura do Repositório
 
 ```bash
-src/cip_bloco.py          # Código principal da cifra e verificação
-docs/whitepaper.md        # Documento técnico explicando o funcionamento
-docs/artigo_estadao.md    # Artigo de resposta enviado ao jornal O Estado de S. Paulo
-examples/                 # Exemplos de arquivos testados e validados
+src/cip_bloco.py           # Código principal da CIP: cifragem, verificação e assinatura vetorial
+docs/whitepaper.md         # Documento técnico detalhado
+docs/resumo_executivo.md   # Versão institucional resumida para órgãos públicos e privados
+docs/artigo_estadao.md     # Artigo enviado como resposta ao jornal O Estado de S. Paulo
+examples/                  # Arquivos reais utilizados em testes (PDFs, textos, binários)
+```
+
+## Saiba mais
+
+- [Whitepaper técnico](docs/whitepaper.md)  
+- [Resumo Executivo da CIP](docs/resumo_executivo.md)  
+- [Repositório oficial no GitHub](https://github.com/costaalv/projeto-delta)
+
+---
+
+## Contato
+
+**Alvaro Costa**  
+Auditor Fiscal · Cientista de Dados · Fundador do Projeto DELTA  
+Ex-aluno da FEA-USP (Economia) e da FDUSP (Direito)  
+costaalv@alumni.usp.br
+
+---
+
+> **Não é segredo. É estrutura.**  
+> **Ou a informação vibra — ou não é original.**
 

@@ -11,28 +11,36 @@ $$
 \Delta_\pi(x) = \pi(x) - 2\pi(x/2)
 $$
 
-O módulo `cip_blocos.py` implementa a **Cifra de Integridade Primal (CIP)**, que opera por projeção espectral em bases derivadas da matriz de cossenos construída com os valores de $\Delta_\pi(x)$. O sistema oferece:
+O pacote `delta-cip`, disponível no PyPI, implementa a **Cifra de Integridade Primal (CIP)**, que opera por projeção espectral em bases derivadas da matriz de cossenos construída com os valores de \(\Delta_\pi(x)\). O sistema oferece:
 
-- **Cifragem por blocos vetoriais**
-- **Decodificação com fidelidade absoluta**
+- **Cifragem por blocos vetoriais em formato binário**
+- **Decodificação com fidelidade absoluta (também em binário)**
 - **Assinatura híbrida por bloco com SHA-256**
 - **Verificação com sensibilidade extrema a alterações**
 
 ---
 
+## Instalação
+
+```bash
+pip install delta-cip
+```
+
+---
+
 ## Funções principais
 
-### `cip_cifrar_blocos_texto(arquivo_entrada, x=7213, size=1024)`
-Divide o arquivo de entrada em blocos, projeta-os vetorialmente e salva a cifragem em `.npz`.
+### `cip_cifrar_blocos_bytes(dados_binarios: bytes, x: int, size: int) -> list`
+Recebe os dados como `bytes`, divide em blocos, projeta vetorialmente e retorna uma lista de blocos cifrados (listas de floats).
 
-### `cip_decifrar_blocos_texto(arquivo_cifrado)`
-Reconstrói o texto original a partir do arquivo cifrado, com precisão absoluta se nenhum bloco for alterado.
+### `cip_decifrar_blocos_bytes(blocos_cifrados: list, x: int, size: int) -> bytes`
+Reconstrói os `bytes` originais a partir dos blocos cifrados, com precisão absoluta se nenhum bloco for alterado.
 
-### `cip_assinar_bloco_hibrido(mensagem, x, size)`
-Gera uma assinatura vetorial por bloco, aplicando `SHA-256` sobre a projeção espectral do vetor.
+### `cip_assinar_bloco_hibrido(mensagem: bytes, x: int, size: int) -> str`
+Gera uma assinatura SHA-256 da projeção vetorial do bloco fornecido.
 
-### `cip_verificar_bloco_hibrido(mensagem, assinaturas_ref, chave)`
-Verifica a integridade dos blocos comparando as assinaturas atuais com as originais. Retorna o número de blocos alterados.
+### `cip_verificar_bloco_hibrido(mensagem: bytes, assinatura: str, x: int, size: int) -> bool`
+Verifica se a assinatura fornecida corresponde à mensagem atual. Retorna `True` ou `False`.
 
 ---
 
@@ -76,64 +84,54 @@ Cada curva representa o vetor espectral do primeiro bloco de um texto sob difere
 - 🟠 Texto com espaço no início
 - 🟢 Texto com espaço no final
 
-A projeção vetorial em base harmônica permite distinguir mutações estruturais mesmo invisíveis ao leitor.
-A curva com espaço no início se afasta do original, revelando **dissonância espectral**; a com espaço no final permanece **idêntica**.
-
 > A integridade, aqui, é registrada como coerência de forma — não como cadeia de símbolos.
 > O CIP não guarda segredo: ele grava a estrutura que vibra com precisão.
 
 ---
 
-## Tentativa de leitura direta do arquivo `.cip.npz`
+## Tentativa de leitura direta de blocos cifrados
 
-Mesmo com acesso ao arquivo `.cip.npz`, sem a base correta, o conteúdo é ilegível.
+Mesmo com acesso aos blocos cifrados, sem a base correta, o conteúdo é ilegível.
 
-### Exemplo: inspeção do vetor cifrado
+### Exemplo: inspeção de um vetor cifrado (via numpy)
 
 ```python
-import numpy as np
+from delta_cip import cip_decifrar_blocos_bytes
 
-data = np.load("texto_original.txt.cip.npz", allow_pickle=True)
-vetor = data["cifrado"][0]
-texto = ''.join([chr(int(round(x))) if 0 <= x < 256 else '?' for x in vetor])
+# Supondo que 'blocos' seja uma lista de vetores cifrados (floats)
+# e que x, size sejam os mesmos usados na cifragem
+
+dados_decifrados = cip_decifrar_blocos_bytes(blocos, x=7213, size=1024)
+texto = dados_decifrados.decode("utf-8", errors="replace")
 print(texto)
 ```
 
-### Saída esperada (truncada)
-
-```text
-'[o vetor cifrado canta, mas só quem tem o diapasão certo ouve a melodia]'
-```
-
-> O vetor cifrado não contém texto visível — apenas ruído numérico sem sentido, mesmo quando inspecionado diretamente.
+---
 
 ## Implicações
 - A integridade no Projeto DELTA é garantida por estrutura, não por segredo.
-
 - O conteúdo cifrado é ilegível sem a base exata.
-
 - A verificação por forma permite detectar até mutações microscópicas.
-
 - O CIP é funcional, auditável, leve — e radicalmente seguro.
 
-> A integridade não é mais protegida por segredo.<br>
-> Ela é ressonância.<br>
+> A integridade não é mais protegida por segredo.  
+> Ela é ressonância.  
 > Ela é forma.
 
+---
+
 ## Status
-- Código modular em Python
 
+- Pacote disponível via `pip install delta-cip`
 - Pronto para auditoria pública
-
 - Documentado e testado
-
 - Em estruturação institucional
 
 ## Repositório oficial
 
 [github.com/costaalv/projeto-delta](https://github.com/costaalv/projeto-delta)
 
-O código-fonte do Projeto DELTA, os notebooks com experimentos, o white paper e os exemplos de verificação vetorial estão abertos para escrutínio público, revisão técnica e contribuições.
+---
 
 ## Valor comercial da verificação espectral
 
@@ -148,8 +146,6 @@ O código-fonte do Projeto DELTA, os notebooks com experimentos, o white paper e
 ```
 Blocos alterados: 1 / 181133
 ```
-
----
 
 ### O que isso significa?
 
@@ -173,23 +169,17 @@ Permite verificar documentos de grande porte (contratos, laudos, balanços, deci
 - Sem recalcular tudo de novo
 - Com detecção vetorial **por forma**
 
----
-
 ### Auditoria e rastreabilidade
 
 - Detecção estrutural em pipelines
 - Rastreabilidade posicional em arquivos versionados
 - Compressão vetorial de autenticidade
 
----
-
 ### Segurança por forma, não por segredo
 
 O CIP não se baseia em segredo:
-> Ele projeta — e ouve.
->
-> Sem a base certa, **não há ressonância.**
->
+> Ele projeta — e ouve.  
+> Sem a base certa, **não há ressonância.**  
 > Só ruído.
 
 ---
@@ -204,29 +194,24 @@ O CIP não se baseia em segredo:
 
 ---
 
-> **Integridade não é mais um segredo bem guardado.**
-> 
+> **Integridade não é mais um segredo bem guardado.**  
 > **É uma forma que vibra com exatidão.**
 
 ---
 
 ### Conclusão
 
-> Detectar 1 byte alterado em 185 MB — com velocidade e precisão — não é mais teoria. É código funcionando.
-> 
-> E ele não grita porque foi violado.
-> 
+> Detectar 1 byte alterado em 185 MB — com velocidade e precisão — não é mais teoria. É código funcionando.  
+> E ele não grita porque foi violado.  
 > Ele grita porque a harmonia foi quebrada.
 
-> **O Projeto DELTA propõe uma nova forma de garantir a verdade:**
-> 
+> **O Projeto DELTA propõe uma nova forma de garantir a verdade:**  
 > **por estrutura, não por sigilo.**
 
 ## Autor
 
-**Alvaro Costa**<br>
-Projeto DELTA — Integridade Criptográfica por Estrutura<br>
-Ex-aluno da FEA-USP (Economia) e FDUSP (Direito)<br>
-Auditor Fiscal de Rendas do Estado de São Paulo<br>
-Cientista de Dados
+**Alvaro Costa**  
+Auditor Fiscal · Cientista de Dados · Fundador do Projeto DELTA  
+Ex-aluno da FEA-USP (Economia) e da FDUSP (Direito)  
+costaalv@alumni.usp.br
 
