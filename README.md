@@ -1,5 +1,7 @@
 # Projeto DELTA — Cifra de Integridade Primal (CIP)
 
+# Projeto DELTA — Cifra de Integridade Primal (CIP)
+
 A **Cifra de Integridade Primal (CIP)** é uma proposta inédita de integridade digital baseada em **estrutura, não em segredo**.
 
 Em vez de criptografar, a CIP **projeta** cada bloco de dados em uma base harmônica derivada da estrutura espectral dos números primos:
@@ -15,24 +17,23 @@ O resultado é um sistema leve, auditável, pós-quântico e hipersensível:
 
 ## Principais Características
 
-- **Integridade vetorial absoluta**: projeção em base espectral primitiva
-- **Verificação bloco a bloco** com hash SHA-256
-- **Sensível a mutações mínimas** — até 1 bit ou espaço em branco
-- **Resistência estrutural à computação quântica**
-- **Sem segredo, sem chave, sem encriptação**
-- **Funciona com qualquer conteúdo**: texto, PDF, imagem, código, áudio
+- **Integridade vetorial absoluta**: projeção em base espectral derivada dos primos  
+- **Verificação bloco a bloco** com hash SHA-256  
+- **Sensível a mutações mínimas** — até 1 bit ou espaço em branco  
+- **Resistência estrutural à computação quântica**  
+- **Sem segredo, sem chave, sem encriptação**  
+- **Funciona com qualquer conteúdo**: texto, PDF, imagem, código, áudio  
 
 ---
 
 ## Estrutura do Repositório
 
 ```bash
-src/cip_bloco.py           # Código principal da CIP: cifragem, verificação e assinatura vetorial
-docs/whitepaper.md         # Documento técnico detalhado
-docs/resumo_executivo.md   # Versão institucional resumida para órgãos públicos e privados
-docs/artigo_estadao.md     # Artigo enviado como resposta ao jornal O Estado de S. Paulo
-examples/                  # Arquivos reais utilizados em testes (PDFs, textos, binários)
-```
+src/cip/core.py            # Funções principais de cifragem, assinatura e verificação vetorial
+docs/                      # Whitepaper, resumo executivo, carta de apresentação e fundamentos jurídicos
+notebooks/                 # Notebooks explicativos com demonstrações práticas
+examples/                  # Arquivos reais utilizados nos testes (texto, binário, PDF)
+
 
 ## Saiba mais
 
