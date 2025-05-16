@@ -47,12 +47,13 @@ Explore abaixo os notebooks do Projeto DELTA que demonstram passo a passo o func
 
 | Nº  | Notebook                                              | Descrição                                                                                          | Abrir no Colab |
 |-----|--------------------------------------------------------|------------------------------------------------------------------------------------------------------|----------------|
-| 01  | `01_estrutura_primal_e_matriz_cossenos.ipynb`         | Introdução à matriz harmônica e à estrutura espectral baseada em $\Delta_\pi(x)$.                            | [🔗 Abrir](https://colab.research.google.com/drive/https://drive.google.com/file/d/18uKKdsr5_bka8NblUSWzDO5j95PRv2jF/view?usp=sharing) |
-| 02  | `02_cifragem_espectral_com_cip.ipynb`                 | Demonstra a cifragem vetorial dos dados com base espectral derivada dos primos.                    | [🔗 Abrir](https://colab.research.google.com/drive/https://drive.google.com/file/d/1ehnbiCWM8HBkSZlIGO3H4ZBwgORi2yuc/view?usp=sharing) |
-| 03  | `03_verificacao_de_integridade_em_arquivos.ipynb`     | Verificação espectral da integridade de arquivos com detecção de alterações microscópicas.         | [🔗 Abrir](https://colab.research.google.com/drive/https://drive.google.com/file/d/1hfwhqadasCPwCsfG5vNmgA8w97YfKiJO/view?usp=sharing) |
-| 04  | `04_aplicacoes_reais_e_verificacao_cip.ipynb`         | Casos práticos de aplicação da CIP para autenticação e segurança digital.                          | [🔗 Abrir](https://colab.research.google.com/drive/https://drive.google.com/file/d/1Syd7oKhWj6crsBq3UvdXXf1_R2S62P0a/view?usp=sharing) |
-| 05  | `05_cip_demo.ipynb`                                   | Demonstração compacta de todo o ciclo: cifragem, assinatura, corrupção e verificação.              | [🔗 Abrir](https://colab.research.google.com/drive/https://drive.google.com/file/d/1CS7VKNX3zz9ruO4s0MkG2ElJYtIZBcfk/view?usp=sharing) |
-> Todos os notebooks são autoexplicativos e funcionam direto no navegador com Python 3 e numpy.
+| 01  | `01_estrutura_primal_e_matriz_cossenos.ipynb`         | Introdução à matriz harmônica e à estrutura espectral baseada em Δπ(x).                            | [🔗 Abrir](https://colab.research.google.com/drive/18uKKdsr5_bka8NblUSWzDO5j95PRv2jF) |
+| 02  | `02_cifragem_espectral_com_cip.ipynb`                 | Demonstra a cifragem vetorial dos dados com base espectral derivada dos primos.                    | [🔗 Abrir](https://colab.research.google.com/drive/1ehnbiCWM8HBkSZlIGO3H4ZBwgORi2yuc) |
+| 03  | `03_verificacao_de_integridade_em_arquivos.ipynb`     | Verificação espectral da integridade de arquivos com detecção de alterações microscópicas.         | [🔗 Abrir](https://colab.research.google.com/drive/1hfwhqadasCPwCsfG5vNmgA8w97YfKiJO) |
+| 04  | `04_aplicacoes_reais_e_verificacao_cip.ipynb`         | Casos práticos de aplicação da CIP para autenticação e segurança digital.                          | [🔗 Abrir](https://colab.research.google.com/drive/1Syd7oKhWj6crsBq3UvdXXf1_R2S62P0a) |
+| 05  | `05_cip_demo.ipynb`                                   | Demonstração compacta de todo o ciclo: cifragem, assinatura, corrupção e verificação.              | [🔗 Abrir](https://colab.research.google.com/drive/1CS7VKNX3zz9ruO4s0MkG2ElJYtIZBcfk) |
+
+> Todos os notebooks são autoexplicativos e funcionam direto no navegador com **Python 3** e **numpy**.
 
 ---
 
