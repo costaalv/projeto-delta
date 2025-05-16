@@ -31,7 +31,7 @@ src/cip/core.py            # Funções principais de cifragem, assinatura e veri
 docs/                      # Whitepaper, resumo executivo, carta de apresentação e fundamentos jurídicos
 notebooks/                 # Notebooks explicativos com demonstrações práticas
 examples/                  # Arquivos reais utilizados nos testes (texto, binário, PDF)
-
+```
 
 ## Saiba mais
 
